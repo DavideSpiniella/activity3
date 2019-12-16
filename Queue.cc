@@ -16,7 +16,7 @@ class Queue : public cSimpleModule
 
     char name[10];
     char signalname[10];
-    char statisticName[32];
+    char statisticName[20];
     // line of code to get global variable ev
     cEnvir* ev = getEnvir();
 
