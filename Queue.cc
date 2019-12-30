@@ -15,13 +15,10 @@ class Queue : public cSimpleModule
     bool preemption;
 
     char name[10];
-    char signalname[10];
+    char signalname[20];
     char statisticName[20];
     // line of code to get global variable ev
     cEnvir* ev = getEnvir();
-
-    int droppedUser=0;
-    int totalUser=0;
 
     simsignal_t * qlenSignal;
     simsignal_t busySignal;
@@ -59,7 +56,7 @@ void Queue::initialize()
 {
     endServiceMsg = new cMessage("end-service");
     //get preemption parameter
-    preemption=par("preemption");
+    preemption = par("preemption");
     //n represent the number of classes
     n = par("numberofpriority");
     // queue for each priority class
@@ -115,7 +112,7 @@ void Queue::handleMessage(cMessage *msg)
         send(msgServiced, "out");
 
         //Response time: time from msg arrival timestamp to time msg ends service (now)
-        emit(responseTimeSignal[msg->getSchedulingPriority()-1], simTime() - msgServiced->getTimestamp());
+        emit(responseTimeSignal[msgServiced->getSchedulingPriority()-1], simTime() - msgServiced->getTimestamp());
         //check all the classes if the relative queue is empty
         for(int i = 0; i < n; i++){
                 if (queue[i].isEmpty()) { // Empty queue, server goes in IDLE
@@ -149,7 +146,6 @@ void Queue::handleMessage(cMessage *msg)
 
         //Setting arrival timestamp as msg field
         msg->setTimestamp();
-        totalUser++;
             if (!msgServiced) { //No message in service (server IDLE) ==> No queue ==> Direct service
 
                 //ASSERT(queue.getLength() == 0);
